@@ -1,0 +1,100 @@
+<h2>Function annotations</h2>
+<html>
+ <head></head>
+ <body>
+  <p>You already know about docstrings and the role of function inputs and outputs in code clarity. Is there an easier and more concise way to add a document to your code? The answer is positive. This is where <strong>function annotations</strong> come in handy.</p> 
+  <pre><code class="language-python">def square_area(side: 'length of square side') -&gt; 'result of side ** 2':
+    return side ** 2
+
+print(square_area.__annotations__)  # call annotations attribute
+
+# {'side': 'length of square side', 'return': 'result of side ** 2'}</code></pre> 
+  <p>Introduced in <a target="_blank" href="https://www.python.org/dev/peps/pep-3107" rel="noopener noreferrer nofollow">PEP-3107</a>, the<strong> f</strong><strong>unction annotations</strong> are a Python 3 feature that lets you add arbitrary metadata to function arguments and a return value. According to the PEP, the function annotations are arbitrary Python expressions that can be associated with various function parts. Python does not attach any meaning to these annotations by itself.</p> 
+  <h5>Importance of annotations</h5> 
+  <p>Function annotations require minimal effort, but they can have a huge impact on your code: </p> 
+  <ul> 
+   <li>They improve the way you write your code — it becomes more concise;</li> 
+   <li>They encourage you to think outside the box;</li> 
+   <li>By normalizing document inputs and outputs, they help you and other people easier understand the code;</li> 
+   <li>They help you identify type-related issues.</li> 
+  </ul> 
+  <p>Enough said, let's see what the annotations are!</p> 
+  <h5>Syntax of annotations</h5> 
+  <p>First of all, we'll discuss the main syntactic structures of annotations. Mind the structures below:</p> 
+  <p></p>
+  <div class="alert alert-primary">
+   We will often use the word "expression" in the examples. In function annotations, an expression is any valid Python expression from a string (
+   <code class="language-python">Bob drives a nice car.</code>) to object types (
+   <code class="language-python">str</code>, 
+   <code class="language-python">int</code>, 
+   <code class="language-python">dict</code>, etc.) and mathematic expressions (
+   <code class="language-python">5 + 2</code>).
+  </div>
+  <p></p> 
+  <ol> 
+   <li>Annotations for <strong>simple parameters</strong>. An argument is followed by <code class="language-python">:</code> and an expression. The annotation syntax runs like this: <pre><code class="language-python">def func(argument: "expression", default_argument: "expression"=5):
+    ...</code></pre> <p></p>
+    <div class="alert alert-primary">
+     The default arguments are specified after the annotation expression.
+    </div><p></p> </li> 
+   <li>Annotations for <strong>excess parameters</strong>.<strong> </strong>The<strong> </strong>excess parameters like <code class="language-python">*args</code> and <code class="language-python">**kwargs</code> allow passing an arbitrary number of arguments in the function call. The syntax is very similar to the one with simple parameters: <pre><code class="language-python">def func(*args: "expression", **kwargs: "expression"):
+    ...</code></pre> </li> 
+   <li>Annotations for <strong>nested parameters</strong>.<strong> </strong>In the case of nested parameters, like tuples, for example, the annotation comes after the variable, not after the tuple. You don't need to annotate all members of a nested parameter. It can be done as follows: <pre><code class="language-python">def func((x, y: "expression"),
+         (a: "expression", b: "expression")=(None, None)):
+    ...</code></pre> </li> 
+   <li>Annotations for<strong> </strong>the <code class="language-python">return</code> type.<strong> </strong>Annotation of the <code class="language-python">return</code> type is quite different from argument annotation. The <code class="language-python">return</code> value is annotated with <code class="language-python">-&gt;</code> followed by an annotation expression. Mind the example below: <pre><code class="language-python">def func(argument: "expression") -&gt; "expression":
+   ...</code></pre> </li> 
+  </ol> 
+  <p>It's important to understand that annotations are completely optional, and Python doesn't provide any semantic significance for annotations. It only provides nice syntactic support for associating metadata and an easy way to access it. We've discussed the first part, the syntax, so let's talk about accessing annotations.</p> 
+  <h5>Accessing annotations</h5> 
+  <p>All annotations are stored in a dictionary named <code class="language-python">__annotations__</code> that is an attribute of the function:</p> 
+  <pre><code class="language-python">def func(x:'annotating x', y: 'annotating y', z: int) -&gt; float:
+    return x + y + z
+
+print(func.__annotations__)
+# {'x': 'annotating x', 'y': 'annotating y', 'z': &lt;class 'int'&gt;, 'return': &lt;class 'float'&gt;}</code></pre> 
+  <p>As you can understand, annotations are not typed declarations. They are just arbitrary expressions that allow arbitrary values to be stored in the <code class="language-python">__annotations__</code> dictionary.</p> 
+  <h5>Case studies</h5> 
+  <p>As we recall from <a target="_blank" href="https://www.python.org/dev/peps/pep-3107" rel="noopener noreferrer nofollow">PEP-3107</a>, annotations have no standard meaning or semantics. However, there're certain cases that we will discuss in more depth.</p> 
+  <p>One of the biggest advantages of function annotations is that you can move an argument and a return value from a docstring. Let's take a look at the two functions below. The first one employs a docstring, while the second one is annotated according to PEP-3107. As you can see, the second option is more concise and easy to read:</p> 
+  <pre><code class="language-python">def multiplication(a, b):
+    """Multiply a by b 
+    args:
+        a - the multiplicand
+        b - the multiplier
+    return:
+        the result of multiplying a by b
+    """
+    return a * b
+    
+def multiplication(a: 'the multiplicand', b: 'the multiplier') -&gt; 'the result of multiplying a by b':
+    """Multiply a by b"""
+    return a * b</code></pre> 
+  <p>There are several other benefits of annotations over docstrings. First of all, when an argument is renamed, the docstring may remain out of date, so don't forget to update them. It is also much easier to see whether an argument is documented or not. Finally, the <code class="language-python">__annotations__</code> attribute provides a direct, standard mechanism to access metadata.</p> 
+  <p>Another benefit of annotations over docstring is that you can specify different types of metadata, such as tuples or dictionaries, without any special parsing methods or external modules. Let's say you want to annotate arguments and a return value with both type<em> </em>and a description string. You can do that by annotating with a <code class="language-python">dict</code> that has two keys: <code class="language-python">type</code> and <code class="language-python">description</code>:</p> 
+  <pre><code class="language-python">def multiplication(a: dict(description='the multiplicand', type=int), 
+                   b: dict(description='the multiplier', type=int)) 
+                   -&gt; dict(description='the result of multiplying a by b', type=int):
+    """Multiply a by b"""
+    return a * b
+
+
+print(multiplication.__annotations__)
+
+#{'a': {'description': 'the multiplicand', 'type': &lt;class 'int'&gt;},
+# 'b': {'description': 'the multiplier', 'type': &lt;class 'int'&gt;},
+# 'return': {'description': 'the result of multiplying a by b',
+#            'type': &lt;class 'int'&gt;}}</code></pre> 
+  <p>Another case where function annotations can be helpful is optional typing. Even though Python is dynamically typed, and any object can be passed as a function argument, there are many cases when functions require arguments of a specific type. With annotations, you can specify the type right next to the argument in a very natural way:</p> 
+  <pre><code class="language-python">def addition(a: int, b: float) -&gt; float:
+	return a + b</code></pre> 
+  <p>Remember that solely specifying the type is not going to enforce it. For example, there will be no errors if the function is called with incorrect argument types. But still, even specifying the type in annotations can make the intent more readable than specifying the type in the docstring. It can help users understand how to call the function.</p> 
+  <h5>Conclusion</h5> 
+  <p>In this topic, we have found out what function annotations are, how to write them, and how to access them. Let's briefly go through the main points we have discussed:</p> 
+  <ul> 
+   <li>Python doesn't provide any semantics with annotations.</li> 
+   <li>They are stored in a dictionary and can be accessed by calling the <code class="language-python">__annotations__</code> method.</li> 
+   <li>Annotations are completely optional, but they have various use cases.</li> 
+  </ul>
+ </body>
+</html>

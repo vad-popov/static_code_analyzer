@@ -1,0 +1,14 @@
+type: code
+files:
+- name: main.py
+  visible: true
+  text: |-
+    def concat():
+        pass
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/9556#comment
+status: Solved
+feedback:
+  message: <html>Correct solution</html>
+  time: Fri, 05 Nov 2021 08:06:01 UTC
+record: -1

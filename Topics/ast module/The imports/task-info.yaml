@@ -1,0 +1,17 @@
+type: code
+files:
+- name: main.py
+  visible: true
+  text: |-
+    import ast
+
+    tree = ast.parse(code)
+
+    # put your code here
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/15497#comment
+status: Solved
+feedback:
+  message: <html>Correct solution</html>
+  time: Sat, 04 Dec 2021 23:02:50 UTC
+record: -1

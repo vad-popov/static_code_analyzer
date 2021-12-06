@@ -1,0 +1,182 @@
+<h2>Docstrings</h2>
+<html>
+ <head></head>
+ <body>
+  <p>You already know that comments are very useful to explain the inner logic of your code and clarify implicit steps. Comments are often intended for other people working on your program. However, there can also be people who will just use your program and they won't need to look through the code and understand all the implementation details. They will need to learn how to use a certain function, a module, etc. So, to briefly describe the object's functionality and how to use it, you can provide a general description via a <strong>docstring</strong>, the main unit of documenting in Python.</p> 
+  <p>In this topic, we will take a look at what is considered documentation in Python. Moreover, docstrings have several Python Enhancement Proposals dedicated to them, so we will also sum up the conventions of <a target="_blank" href="https://www.python.org/dev/peps/pep-0257/" rel="noopener noreferrer nofollow">PEP 257</a> and <a target="_blank" href="https://www.python.org/dev/peps/pep-0287/" rel="noopener noreferrer nofollow">PEP 287</a>.</p> 
+  <h5>What is a docstring?</h5> 
+  <p><strong>Docstring</strong> (<u>doc</u>umentation <u>string</u>) is a string literal. It is written as the first statement in the definition of a module, a class, a method, a function, etc., and briefly describes its behavior and how you can use it, what parameters you should pass to the function.</p> 
+  <p>Let's take one example right away! Python has a built-in <strong>statistics</strong> module. It contains several functions for data statistics; all of them have descriptions in the docs. For example, the source code for the function <code class="language-python">median()</code> , and everything within <code class="language-python">""" """</code> (triple-double quotes) is actually the docstring describing the function.</p> 
+  <pre><code class="language-python">def median(data):
+    """Return the median (middle value) of numeric data.
+
+    When the number of data points is odd, return the middle data point.
+    When the number of data points is even, the median is interpolated by
+    taking the average of the two middle values:
+
+    &gt;&gt;&gt; median([1, 3, 5])
+    3
+    &gt;&gt;&gt; median([1, 3, 5, 7])
+    4.0
+
+    """
+    data = sorted(data)
+    n = len(data)
+    if n == 0:
+        raise StatisticsError("no median for empty data")
+    if n%2 == 1:
+        return data[n//2]
+    else:
+        i = n//2
+        return (data[i - 1] + data[i])/2</code></pre> 
+  <p>The docstring here contains a description of what the function does and its expected behavior towards the values passed to it, accompanied by usage examples. Note that triple-double quotes are the conventional punctuation signs to indicate a docstring in Python, and the annotation should start with a capital letter and end with a period, as recommended by PEP 257. What is more, just like a comment, each line in a docstring should be no longer than 72 characters.</p> 
+  <p>Importantly, we can access docstrings without reading the source code itself: for example, by using the <code class="language-python">__doc__</code> attribute:</p> 
+  <pre><code class="language-python">import statistics
+
+statistics.median.__doc__
+# Return the median (middle value) of numeric data.
+#
+#    When the number of data points is odd, return the middle data point.
+#    When the number of data points is even, the median is interpolated by
+#    taking the average of the two middle values:
+#
+#    &gt;&gt;&gt; median([1, 3, 5])
+#    3
+#    &gt;&gt;&gt; median([1, 3, 5, 7])
+#    4.0</code></pre> 
+  <p>Alternatively, we can call the <code class="language-python">help()</code> function on the object:</p> 
+  <pre><code class="language-python">help(statistics.median)
+# Help on function median in module statistics:
+# 
+# median(data)
+#    Return the median (middle value) of numeric data.
+#    
+#    When the number of data points is odd, return the middle data point.
+#    When the number of data points is even, the median is interpolated by
+#    taking the average of the two middle values:
+#    
+#    &gt;&gt;&gt; median([1, 3, 5])
+#    3
+#    &gt;&gt;&gt; median([1, 3, 5, 7])
+#    4.0</code></pre> 
+  <p>What is more, with <code class="language-python">help()</code>, you can access a docstring for the object even without importing it. To do so, you just need to pass its name in quotes: for example, <code class="language-python">help('statistics.median')</code>.</p> 
+  <p>Now that you know what documentation strings generally are, let's move further and learn more about them.</p> 
+  <h5>Types of docstrings</h5> 
+  <p>The two main types of documentation strings in Python are <em>one-liners</em> and <em>multi-liners</em>. In the previous example, the docstring for the <code class="language-python">median()</code> function is a multi-line docstring. However, the very first line of it can be regarded as a one-liner itself:</p> 
+  <pre><code class="language-python"># Return the median (middle value) of numeric data.</code></pre> 
+  <p>One-line docstrings are a sort of quick summary for your object, it is the shortest description. Ideally, they are easy to understand for any person who uses something in your program for the first time. Generally, it is better to provide a multi-line description, but in some obvious cases that don't require further explanation, one-liners can be acceptable.</p> 
+  <p>Naturally, multi-line docstrings should contain a more detailed description. For example, the <code class="language-python">median</code> docstring includes the function outline and two cases of implementation. The structure of multi-line docstrings can be summed up as:</p> 
+  <ul> 
+   <li>A brief <em>one-line</em> description of the object's purpose;</li> 
+   <li>A more elaborate explanation of the functionality, for instance, a list of classes a module has or usage examples.</li> 
+  </ul> 
+  <p>Now, let's try to write a docstring!</p> 
+  <h5>One-line docstrings for functions and methods</h5> 
+  <p>First, let's create a small example with a one-line string. Below, we declare the <code class="language-python">count_factorial()</code> function and specify what it does in triple double-quotes right after the declaration:</p> 
+  <pre><code class="language-python">def count_factorial(num):
+    """Return the factorial of the number."""
+    if num == 0:
+        return 1
+    else:
+        return num * count_factorial(num - 1)</code></pre> 
+  <p>Under PEP 257, you should follow the next conventions for docstrings for functions and methods:</p> 
+  <ul> 
+   <li>The opening and the closing quotes should be on the same line.</li> 
+   <li>There should be <em>no</em> empty strings either before or after the docstring.</li> 
+   <li>Your description should be imperative, that's why we need the wordings like """<em>Return the factorial.</em>""" or """<em>Return the number.</em>""" instead of """<em>Returns the number.</em>""" or """<em>It returns the number.</em>""".</li> 
+   <li>The description is not a scheme that repeats the object's parameters and return values, like <code class="language-python">"""count_factorial(num) -&gt; int."""</code>.</li> 
+  </ul> 
+  <p>As in the example with <code class="language-python">median()</code>, we can access the annotation via <code class="language-python">__doc__</code>.</p> 
+  <pre><code class="language-python">print(count_factorial.__doc__)
+# Return the factorial of the number.</code></pre> 
+  <p></p>
+  <div class="alert alert-primary">
+   If you have backslashes in your docstring, you should also wrap it with the 
+   <code class="language-python">r</code> prefix, for example, as in 
+   <code class="language-python">r"""A \new example with \triple double-quotes."""</code>. Otherwise, the combination of a backslash and a letter will be handled as an escape sequence.
+  </div>
+  <p></p> 
+  <h5>Multi-line docstrings for functions and methods</h5> 
+  <p>Now, let's create a bit more elaborate description of the function's behavior. Following the general structure above, we start by leaving the first line unchanged: it continues to be the main summary of our function. Next, the multi-line docstring for a method or a function should include the information about the arguments, return values, and other points concerning it. In the example below, we indicate the right argument type for <code class="language-python">num</code>, what value the function returns, and what this return value denotes:</p> 
+  <pre><code class="language-python">def count_factorial(num):
+    """Return the factorial of the number.
+
+    Arguments:
+    num -- an integer to count the factorial of.
+    Return values:
+    The integer factorial of the number.
+    """
+    if num == 0:
+        return 1
+    else:
+        return num * count_factorial(num-1)</code></pre> 
+  <p>As for style conventions, it is worth noting the following three things:</p> 
+  <ol> 
+   <li>The summary is separated from the detailed description using a single blank line. </li> 
+   <li>The docstring in the example starts right after the triple-double quotes. However, it is also possible to specify them on the next line after the opening quotes: <pre><code class="language-python">def count_factorial(num):      
+      """
+      Return the factorial of the number.
+      
+      The rest of the doctsring.  
+      """</code></pre> </li> 
+   <li>The detailed description starts at the same position as the first quote of the first docstring line — there's no indent.</li> 
+  </ol> 
+  <h5>Classes and modules</h5> 
+  <p>Now, we will turn to class and module docstrings. PEP 257 proposes the following conventions:</p> 
+  <ul> 
+   <li><em>Module docstrings</em> should also provide a brief one-line description. After that, it is recommended to specify all classes, methods, functions, or any other of the module's objects.</li> 
+   <li>In <em>class docstrings</em>, apart from the general purpose of the class, you should indicate the information about methods, instance variables, attributes, and so forth. Nevertheless, all these individual objects should still have their own docstrings, with more thorough information given.</li> 
+  </ul> 
+  <p>To practice this, let's create an example summing up both cases. Below, we briefly visualize the docstrings of the <code class="language-python">Person</code> class.</p> 
+  <pre><code class="language-python"># information.py module
+"""The functionality for manipulating the user-related information."""
+
+
+class Person:
+    """The creation of the Person object and the related functionality."""
+
+    def __init__(self, name, surname, birthdate):
+        """The initializer for the class.
+
+        Arguments:
+        name -- a string representing the person's name.
+        surname -- a string representing the person's surname.
+        birthdate -- a string representing the person's birthdate.
+        """
+        self.name = name
+        self.surname = surname
+        self.birthdate = birthdate
+
+    def calculate_age(self):
+        """Return the current age of the person."""
+        # the body of the method</code></pre> 
+  <p>First of all, note that the class constructor should be documented in the <code class="language-python">__init__</code> method. Also, according to PEP 257, we should insert a blank line after a class docstring to separate the class documentation and the first method.</p> 
+  <p>In the given example, we don't give a comprehensive annotation for the module and for the class, even though it is recommended. Why so? Imagine that you list <em>all</em> the objects that the <code class="language-python">information.py</code><em> </em>module contains in the docstring, and then, in its turn, every object that the <code class="language-python">Person</code> class contains in the docstring. In this case, your annotation may get redundant: for example, you would have to repeat what the <code class="language-python">calculate_age()</code> function does three times: in the module's annotation, in the class' one, and, finally, in the function's annotation. This is done so that just by looking at the docstring for the object we can get a deeper understanding of what it contains. However, when we use some documentation generating tools or the <code class="language-python">help()</code> function and call them on the class, we are likely to get the outline of all its methods even without specifying them in the class docstring.</p> 
+  <h5>The help() function</h5> 
+  <p>Perhaps, you came across the <code class="language-python">help()</code> function previously: it is used to access the documentation of the object. If you type this command without any arguments, it will start an interactive help utility. To get the documentation of a particular module (a class, a method, etc.) you simply need to pass it as the argument to this function. Take a look at the example below — there we learn the documentation for the <code class="language-python">Person</code> class, defined in the <em>information.py</em> module.</p> 
+  <pre><code class="language-python">help(Person)
+# Help on class Person in module __main__:
+#
+# class Person(builtins.object)
+#  |  The creation of the Person object and the related functionality.
+#  |  
+#  |  Methods defined here:
+#  |  
+#  |  __init__(self, name, surname, birthdate)
+#  |      The initializer for the class.
+#  |      
+#  |      Arguments:
+#  |      name -- a string representing the person's name.
+#  |      surname -- a string representing the person's surname.
+#  |      birthdate -- a string representing the person's birthdate.
+#  |  
+#  |  calculate_age(self)
+#  |      Return the current age of the person.</code></pre> 
+  <p>As you can see, here we obtain the docstrings not only for the class but also for all of its objects.</p> 
+  <h5>Summary</h5> 
+  <p>So far, in this topic, we have covered general recommendations concerning the style of writing docstrings in Python with respect to PEP 257. Although this is the prevalent style of designing docstrings, other style guides also exist. For example, you can check out <a target="_blank" href="https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings" rel="noopener noreferrer nofollow">Google-format</a> docstrings.</p> 
+  <p>Generally, docstrings can be used to describe the behavior of modules, classes, functions, and so forth. Python uses triple-double quotes <code class="language-python">"""..."""</code> for them. One-line docstrings are the bare minimum. However, you can use multi-line docstrings to describe the features of your objects more thoroughly.</p> 
+  <p>You can use the built-in <code class="language-python">help()</code> function to access the documentation of the object. To do so, you just need to pass it as the argument to the function. Alternatively, you can call the <code class="language-python">.__doc__</code> method on the object.</p> 
+  <p>Now, let's practice what you have learned!</p>
+ </body>
+</html>

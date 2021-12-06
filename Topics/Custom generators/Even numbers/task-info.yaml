@@ -1,0 +1,20 @@
+type: code
+files:
+- name: main.py
+  visible: true
+  text: |-
+    n = int(input())
+
+
+    def even():
+        yield ...
+
+
+    # Don't forget to print out the first n numbers one by one here
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/8275#comment
+status: Solved
+feedback:
+  message: <html>Correct solution</html>
+  time: Mon, 29 Nov 2021 18:06:18 UTC
+record: -1
